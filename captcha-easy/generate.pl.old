@@ -1,0 +1,37 @@
+#!/usr/bin/perl
+use GD;
+use GD::Simple;
+#use Image::Magick;
+use MIME::Base64;
+
+($problem_file, $solution_file) = @ARGV;
+open(INFILE,">$problem_file");
+open(OUTFILE,">$solution_file");
+
+$img = GD::Simple->new(50,50);
+my $number = int(rand(9));
+print OUTFILE "$number";
+close OUTFILE;
+$img->bgcolor('black');
+$img->fgcolor('black');
+my $x = int(rand(30)) + 10;
+my $y = int(rand(30)) + 10;
+$img->moveTo($x, $y);
+$img->string($number);
+#my $inputfile = "test.png";
+#open my $out, '>', $inputfile or die;
+#print $out $img->png;	
+for(my $y = 0; $y < 50; $y++){
+	for(my $x = 0; $x < 50; $x++){
+		my $index = $img->getPixel($x, $y);
+		my ($r,$g,$b) = $img->rgb($index);
+		my $c = sprintf("%3d", $g);
+		if($c == 255){
+			print INFILE "0";
+		} else {
+			print INFILE "1";
+		}
+	}
+	#print INFILE "\n";
+}
+close INFILE;
